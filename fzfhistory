@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+__fzf_history () {
+  cut -c 22- ~/.persistent_history | awk '!seen[$0]++' | fzf --tac --tiebreak=begin
+}
