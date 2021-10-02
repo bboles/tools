@@ -1,5 +1,21 @@
 #!/usr/bin/env bash
 
 __fzf_history () {
-  cut -c 22- ~/.persistent_history | awk '!seen[$0]++' | fzf --tac --tiebreak=begin
+  local output
+  local old_readline_line="$READLINE_LINE"
+
+  output=$(cut -c 21- ~/.persistent_history | awk '!seen[$0]++' | fzf --tac --tiebreak=index --bind=ctrl-r:toggle-sort --query "$READLINE_LINE")
+
+  READLINE_LINE=${output#*}
+  if [[ -n "$READLINE_LINE" ]]; then
+    # If we selected an fzf entry, we will have READLINE_LINE set so setup
+    # READLINE_POINT to be at the end of the READLINE_LINE string.
+    READLINE_POINT="${#READLINE_LINE}"
+    echo "$READLINE_LINE"
+  else
+    # If we did not select an fzf entry, put READLINE_LINE back to what it was
+    # originally.  READLINE_POINT will still be what it was originally so our
+    # cursor goes back to the original spot.
+    READLINE_LINE="${old_readline_line}"
+  fi
 }
