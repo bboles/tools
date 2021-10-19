@@ -4,7 +4,7 @@ __fzf_history () {
   local output
   local old_readline_line="$READLINE_LINE"
 
-  output=$(cut -c 21- ~/.persistent_history | awk '!seen[$0]++' | fzf --tac --tiebreak=index --bind=ctrl-r:toggle-sort --query "$READLINE_LINE")
+  output=$(cut -c 21- ~/.persistent_history | awk '!seen[$0]++' | fzf --tac --tiebreak=begin --bind=ctrl-r:toggle-sort --query "$READLINE_LINE")
 
   READLINE_LINE=${output#*}
   if [[ -n "$READLINE_LINE" ]]; then
