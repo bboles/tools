@@ -15,8 +15,10 @@ __fzf_history () {
                --tiebreak=begin,index \
                --bind=ctrl-r:toggle-sort \
                --query "$READLINE_LINE" | \
-           # Only print the command field.
-           awk -F'|' '{print $2}')
+           # Only print the command using cut.  This also avoids any
+           # problematic characters that could be misinterpreted as a field
+           # delimiter if we were using something like awk instead.
+           cut -c 21-)
 
   READLINE_LINE=${output#*}
   if [[ -n "$READLINE_LINE" ]]; then
