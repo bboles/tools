@@ -6,14 +6,16 @@ __fzf_history () {
 
            # Reverse file so our most recent entries show up first.
   output=$(sort -r ~/.persistent_history | \
-           # The pipe symbol is used a field separator in our file.
-           # Check the second field for dupes and print the entire line.
-           awk -F'|' '!seen[$2]++ {print $0}' | \
-           # Also have fzf use the second field as well as the pipe delimiter.
+           # A tab is used a field separator in our file so search from the
+           # beginning of the line to the first tab.  Check the second field
+           # for dupes and print the entire line.
+           awk -F'^.*\t' '!seen[$2]++ {print $0}' | \
+           # Also have fzf use the second field as well as the delimiter.
            fzf --nth=2 \
-               --delimiter='\|' \
+               --delimiter='^.*\t' \
                --tiebreak=begin,index \
                --bind=ctrl-r:toggle-sort \
+               --tabstop=3 \
                --query "$READLINE_LINE" | \
            # Only print the command using cut.  This also avoids any
            # problematic characters that could be misinterpreted as a field
